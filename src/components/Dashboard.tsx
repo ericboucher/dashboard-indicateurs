@@ -91,13 +91,15 @@ export const Dashboard = () => {
     }
 
     return (
-        <Container maxWidth="lg">
-            <Box py={4}>
-                <Typography variant="h4" component="h1" gutterBottom>
+        <Container maxWidth="lg" sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+            <Box sx={{ pt: 4, pb: 2 }}>
+                <Typography variant="h4" component="h1" align="left">
                     Indicateurs de la Transition Écologique
                 </Typography>
+            </Box>
 
-                <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
+            <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Paper elevation={3} sx={{ p: 3 }}>
                     <FormControl fullWidth>
                         <InputLabel id="indicator-select-label">Selectionner l'indicateur</InputLabel>
                         <Select
@@ -126,17 +128,17 @@ export const Dashboard = () => {
                 </Paper>
 
                 {error ? (
-                    <Paper elevation={3} sx={{ p: 3, mb: 4, bgcolor: 'error.light' }}>
+                    <Paper elevation={3} sx={{ p: 3, bgcolor: 'error.light' }}>
                         <Typography color="error.contrastText">
                             {error}
                         </Typography>
                     </Paper>
                 ) : selectedMeasureData && (
-                    <Paper elevation={3} sx={{ p: 3 }}>
+                    <Paper elevation={3} sx={{ p: 3, flex: 1 }}>
                         <Typography variant="h6" gutterBottom>
                             Résultats
                         </Typography>
-                        <pre style={{ overflow: 'auto', maxHeight: '500px' }}>
+                        <pre style={{ overflow: 'auto', maxHeight: 'calc(100vh - 400px)' }}>
                             {JSON.stringify(selectedMeasureData, null, 2)}
                         </pre>
                     </Paper>
