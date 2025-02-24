@@ -8,20 +8,29 @@ import {
     MenuItem, 
     Typography,
     Paper,
-    Grid,
-    CircularProgress
+    CircularProgress,
+    ListSubheader
 } from '@mui/material';
 import { ApiService, Indicator } from '../services/api.service';
 
 export const Dashboard = () => {
     const [indicators, setIndicators] = useState<Indicator[]>([]);
-    const [selectedIndicator, setSelectedIndicator] = useState<string>('');
+    const [selectedMeasure, setSelectedMeasure] = useState<string>('');
+    const [selectedMeasureData, setSelectedMeasureData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         fetchIndicators();
     }, []);
+
+    useEffect(() => {
+        if (selectedMeasure) {
+            fetchMeasureData(selectedMeasure);
+        } else {
+            setSelectedMeasureData(null);
+        }
+    }, [selectedMeasure, indicators]);
 
     const fetchIndicators = async () => {
         try {
@@ -36,8 +45,33 @@ export const Dashboard = () => {
         }
     };
 
+    const fetchMeasureData = async (measureName: string) => {
+        try {
+            setLoading(true);
+            const query = {
+                query: {
+                    measures: [measureName],
+                    limit: 1000
+                }
+            };
+            const data = await ApiService.getIndicatorData(query);
+            if (data.error) {
+                setError(data.error);
+                setSelectedMeasureData(null);
+            } else {
+                setSelectedMeasureData(data);
+                setError(null);
+            }
+        } catch (err: any) {
+            setError(err.response?.data?.error || err.message || 'Failed to fetch measure data.');
+            setSelectedMeasureData(null);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleIndicatorChange = (event: any) => {
-        setSelectedIndicator(event.target.value);
+        setSelectedMeasure(event.target.value);
     };
 
     if (loading) {
@@ -60,39 +94,52 @@ export const Dashboard = () => {
         <Container maxWidth="lg">
             <Box py={4}>
                 <Typography variant="h4" component="h1" gutterBottom>
-                    Ecological Transition Indicators
+                    Indicateurs de la Transition Écologique
                 </Typography>
 
                 <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
                     <FormControl fullWidth>
-                        <InputLabel id="indicator-select-label">Select Indicator</InputLabel>
+                        <InputLabel id="indicator-select-label">Selectionner l'indicateur</InputLabel>
                         <Select
                             labelId="indicator-select-label"
                             id="indicator-select"
-                            value={selectedIndicator}
+                            value={selectedMeasure}
                             label="Select Indicator"
                             onChange={handleIndicatorChange}
                         >
-                            {indicators.map((indicator) => (
-                                <MenuItem key={indicator.name} value={indicator.name}>
+                            {indicators.map((indicator) => [
+                                <ListSubheader key={`header-${indicator.name}`}>
                                     {indicator.title}
-                                </MenuItem>
-                            ))}
+                                </ListSubheader>,
+                                Object.entries(indicator.measures || {}).map(([id, measure]) => (
+                                    <MenuItem 
+                                        key={id} 
+                                        value={measure.name}
+                                        sx={{ pl: 4 }}
+                                    >
+                                        {measure.title}
+                                    </MenuItem>
+                                ))
+                            ])}
                         </Select>
                     </FormControl>
                 </Paper>
 
-                {selectedIndicator && (
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <Paper elevation={3} sx={{ p: 3 }}>
-                                <Typography variant="h6" gutterBottom>
-                                    Selected Indicator Details
-                                </Typography>
-                                {/* We'll add visualization components here */}
-                            </Paper>
-                        </Grid>
-                    </Grid>
+                {error ? (
+                    <Paper elevation={3} sx={{ p: 3, mb: 4, bgcolor: 'error.light' }}>
+                        <Typography color="error.contrastText">
+                            {error}
+                        </Typography>
+                    </Paper>
+                ) : selectedMeasureData && (
+                    <Paper elevation={3} sx={{ p: 3 }}>
+                        <Typography variant="h6" gutterBottom>
+                            Résultats
+                        </Typography>
+                        <pre style={{ overflow: 'auto', maxHeight: '500px' }}>
+                            {JSON.stringify(selectedMeasureData, null, 2)}
+                        </pre>
+                    </Paper>
                 )}
             </Box>
         </Container>
