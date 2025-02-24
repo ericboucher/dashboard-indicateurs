@@ -1,50 +1,105 @@
-# React + TypeScript + Vite
+# Dashboard Indicateurs de la Transition Écologique
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Ce dashboard permet de visualiser les indicateurs de la transition écologique en France, en utilisant l'API du Hub d'Indicateurs Territoriaux.
 
-Currently, two official plugins are available:
+## Technologies
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React + TypeScript
+- Vite
+- Material-UI
+- Firebase Hosting
 
-## Expanding the ESLint configuration
+## Prérequis
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Node.js (v18 ou supérieur)
+- Yarn
+- Firebase CLI (`yarn global add firebase-tools`)
 
-- Configure the top-level `parserOptions` property like this:
+## Installation
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+1. Cloner le repository
+```bash
+git clone https://github.com/your-username/dashboard-indicateurs.git
+cd dashboard-indicateurs
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+2. Installer les dépendances
+```bash
+yarn install
 ```
+
+## Développement
+
+Pour lancer l'application en mode développement :
+```bash
+yarn dev
+```
+
+L'application sera accessible à l'adresse [http://localhost:5173](http://localhost:5173)
+
+## Tests et Linting
+
+Pour lancer le linter :
+```bash
+yarn lint
+```
+
+## Build
+
+Pour créer une version de production :
+```bash
+yarn build
+```
+
+## Déploiement
+
+1. Se connecter à Firebase :
+```bash
+yarn firebase:login
+```
+
+2. Initialiser Firebase (première fois uniquement) :
+```bash
+yarn firebase:init
+```
+Suivre les instructions :
+- Sélectionner "Hosting"
+- Choisir "dist" comme dossier public
+- Configurer comme une Single Page App
+- Ne pas écraser index.html
+
+3. Déployer l'application :
+```bash
+yarn deploy
+```
+
+## Structure du Projet
+
+```
+dashboard-indicateurs/
+├── src/
+│   ├── components/     # Composants React
+│   ├── services/      # Services API
+│   ├── config/        # Configuration
+│   └── types/         # Types TypeScript
+├── public/            # Assets statiques
+└── dist/             # Build de production
+```
+
+## API
+
+L'application utilise l'API du Hub d'Indicateurs Territoriaux de Transition Ecologique :
+- Documentation : [https://www.data.gouv.fr/fr/dataservices/hub-dindicateurs-territoriaux-de-transition-ecologique/](https://www.data.gouv.fr/fr/dataservices/hub-dindicateurs-territoriaux-de-transition-ecologique/)
+- Endpoint : `https://api.indicateurs.ecologie.gouv.fr`
+
+## Contribution
+
+1. Fork le projet
+2. Créer une branche (`git checkout -b feature/ma-feature`)
+3. Commit les changements (`git commit -am 'Ajout de ma feature'`)
+4. Push la branche (`git push origin feature/ma-feature`)
+5. Créer une Pull Request
+
+## License
+
+[MIT](LICENSE)

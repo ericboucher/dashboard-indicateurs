@@ -101,7 +101,7 @@ export const Dashboard = () => {
             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 3 }}>
                 <Paper elevation={3} sx={{ p: 3 }}>
                     <FormControl fullWidth>
-                        <InputLabel id="indicator-select-label">Selectionner l'indicateur</InputLabel>
+                        <InputLabel id="indicator-select-label">Sélectionner l'indicateur</InputLabel>
                         <Select
                             labelId="indicator-select-label"
                             id="indicator-select"
